@@ -1,7 +1,6 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,6 +23,11 @@ class MainActivity : AppCompatActivity() {
         //передача списка по старому методу
         //rvAdapter.shopList = it
             rvAdapter.submitList(it)
+        }
+
+        binding.btnAddShopItem.setOnClickListener{
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            startActivity(intent)
         }
 
     }
@@ -71,7 +75,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         rvAdapter.onShopItemClickListener = {
-            Log.d("MyLog", it.toString())
+            val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+            startActivity(intent)
         }
     }
 
