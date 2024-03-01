@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Shopping List</string>
+    <string name="name_activity_shop_item">Name:</string>
+    <string name="count_activity_shop_item">Count:</string>
+    <string name="save">SAVE</string>
+    <string name="error_name_is_empty">Error: Name is empty!</string>
+    <string name="error_count_is_empty">Error: Count is empty!</string>
 </resources>
