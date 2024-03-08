@@ -1,23 +1,28 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var rvAdapter: ShopListAdapter
+    private var shopItemContainer: FragmentContainerView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupRecyclerView()
-
+        shopItemContainer = binding.shopItemContainerLand
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.shopList.observe(this){
         //передача списка по старому методу
@@ -26,11 +31,34 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnAddShopItem.setOnClickListener{
-            val intent = ShopItemActivity.newIntentAddItem(this)
-            startActivity(intent)
+            if (!isOneColumnMode()){
+                launchfragment(ShopItemFragment.newInstanceAddItem())
+            }
+            else {
+                val intent = ShopItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            }
         }
 
     }
+
+    override fun onEdidingFinished() {
+        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
+    }
+
+    private fun isOneColumnMode(): Boolean{
+        return shopItemContainer == null
+    }
+
+    private fun launchfragment(fragment: Fragment){
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.shopItemContainerLand, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun setupRecyclerView(){
         val rvShopList = binding.rvShopList
         with(rvShopList) {
@@ -75,8 +103,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         rvAdapter.onShopItemClickListener = {
-            val intent = ShopItemActivity.newIntentEditItem(this, it.id)
-            startActivity(intent)
+
+            if (!isOneColumnMode()){
+                launchfragment(ShopItemFragment.newInstanceEditItem(it.id))
+            }
+            else {
+                val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+                startActivity(intent)
+            }
+
+
         }
     }
 
