@@ -1,7 +1,6 @@
 package com.example.shoppinglist.domain
 
 data class ShopItem(
-
     val name: String,
     val count: Int,
     val enabled: Boolean,
@@ -9,6 +8,6 @@ data class ShopItem(
 )
 {
     companion object{
-        const val UNDEFINED_ID = -1
+        const val UNDEFINED_ID = 0
     }
 }
